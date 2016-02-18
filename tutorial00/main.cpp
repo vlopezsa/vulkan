@@ -1,5 +1,12 @@
-#include <vulkan/vulkan.h>
+///////////////////////////////////////////////////////////////////////////////
+//                                                                           //
+//  TUTORIAL 00 - INSTANCE CREATION                                          //
+//                                                                           //
+//  Simple instance creation.                                                //
+//                                                                           //
+///////////////////////////////////////////////////////////////////////////////
 
+#include <vulkan/vulkan.h>
 #include <stdio.h>
 
 const char *g_appName = "vulkan-tut00";
