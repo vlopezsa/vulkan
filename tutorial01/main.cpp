@@ -26,69 +26,69 @@ const char *g_appName = "vulkan-tut01";
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//	DESCRIPTION:
-//				It creates a Vulkan Instance
+//  DESCRIPTION:
+//            It creates a Vulkan Instance
 //  INPUT:
-//			OUT		vkInst	 - Pointer where the new instance is created
+//            OUT   vkInst   - Pointer where the new instance is created
 //  OUTPUT:
-//			OUT		vkResult - VK_SUCCESS if everything went right.
-//							 - On error any of these values (check documentation
-//							   for further details):
-//							   VK_ERROR_OUT_OF_HOST_MEMORY
-//							   VK_ERROR_OUT_OF_DEVICE_MEMORY
-//							   VK_ERROR_INITIALIZATION_FAILED
-//							   VK_ERROR_LAYER_NOT_PRESENT
-//							   VK_ERROR_EXTENSION_NOT_PRESENT
-//							   vK_ERROR_INCOMPATIBLE_DRIVER
+//            OUT   vkResult - VK_SUCCESS if everything went right.
+//                           - On error any of these values (check documentation
+//                             for further details):
+//                             VK_ERROR_OUT_OF_HOST_MEMORY
+//                             VK_ERROR_OUT_OF_DEVICE_MEMORY
+//                             VK_ERROR_INITIALIZATION_FAILED
+//                             VK_ERROR_LAYER_NOT_PRESENT
+//                             VK_ERROR_EXTENSION_NOT_PRESENT
+//                             VK_ERROR_INCOMPATIBLE_DRIVER
 //
 VkResult createInstance(VkInstance *vkInst)
 {
-	VkApplicationInfo     appInfo = {};
-	VkInstanceCreateInfo  instInfo = {};
+    VkApplicationInfo     appInfo = {};
+    VkInstanceCreateInfo  instInfo = {};
 
-	VkResult res = VK_SUCCESS;
+    VkResult res = VK_SUCCESS;
 
-	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	appInfo.pNext = NULL;
-	appInfo.pApplicationName = g_appName;
-	appInfo.pEngineName = NULL;
-	appInfo.engineVersion = 1;
-	appInfo.apiVersion = VK_API_VERSION;
+    appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    appInfo.pNext = NULL;
+    appInfo.pApplicationName = g_appName;
+    appInfo.pEngineName = NULL;
+    appInfo.engineVersion = 1;
+    appInfo.apiVersion = VK_API_VERSION;
 
-	instInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-	instInfo.pNext = NULL;
-	instInfo.flags = 0;
-	instInfo.pApplicationInfo = &appInfo;
+    instInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    instInfo.pNext = NULL;
+    instInfo.flags = 0;
+    instInfo.pApplicationInfo = &appInfo;
 
-	// Neither layers nor extension are going to be available
-	instInfo.enabledLayerCount = 0;
-	instInfo.ppEnabledLayerNames = NULL;
-	instInfo.enabledExtensionCount = 0;
-	instInfo.enabledExtensionCount = NULL;
+    // Neither layers nor extension are going to be available
+    instInfo.enabledLayerCount = 0;
+    instInfo.ppEnabledLayerNames = NULL;
+    instInfo.enabledExtensionCount = 0;
+    instInfo.enabledExtensionCount = NULL;
 
-	res = vkCreateInstance(&instInfo, NULL, vkInst);
+    res = vkCreateInstance(&instInfo, NULL, vkInst);
 
-	return res;
+    return res;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//	DESCRIPTION:
-//				It creates a VkPhysicalDevice array with all present physical
-//              devices.
+//  DESCRIPTION:
+//          It creates a VkPhysicalDevice array with all present physical
+//          devices.
 //  INPUT:
-//          IN  vkInst     - Vulkan instance previously initialized
-//			OUT	i_devCount - Pointer where the number of present devices will be
-//                           stored.
-//          OUT vkPhysDev  - Pointer where the array of VkPhysicalDevice objects
-//                           will be created.
+//          IN   vkInst     - Vulkan instance previously initialized
+//          OUT  i_devCount - Pointer where the number of present devices will be
+//                            stored.
+//          OUT vkPhysDev   - Pointer where the array of VkPhysicalDevice objects
+//                            will be created.
 //  OUTPUT:
-//				vkResult	- VK_SUCCESS if everything went right.
-//							- On error any of these values (check documentation
-//							  for further details):
-//							  VK_ERROR_OUT_OF_HOST_MEMORY
-//							  VK_ERROR_OUT_OF_DEVICE_MEMORY
-//							  VK_ERROR_INITIALIZATION_FAILED
+//          vkResult        - VK_SUCCESS if everything went right.
+//                          - On error any of these values (check documentation
+//                            for further details):
+//                            VK_ERROR_OUT_OF_HOST_MEMORY
+//                            VK_ERROR_OUT_OF_DEVICE_MEMORY
+//                            VK_ERROR_INITIALIZATION_FAILED
 //
 
 VkResult createPhysicalDevicesArray(VkInstance vkInst, 
@@ -96,47 +96,47 @@ VkResult createPhysicalDevicesArray(VkInstance vkInst,
 {
     VkResult res = VK_SUCCESS;
 
-	// First query how many devices are present in the system
-	res = vkEnumeratePhysicalDevices(vkInst, i_devCount, NULL);
-	if (res != VK_SUCCESS)
-	{
-		printf("Failed to query number of physical devices present: %d\n", res);
-		return res;
-	}
+    // First query how many devices are present in the system
+    res = vkEnumeratePhysicalDevices(vkInst, i_devCount, NULL);
+    if (res != VK_SUCCESS)
+    {
+        printf("Failed to query number of physical devices present: %d\n", res);
+        return res;
+    }
 
-	// Verify that there are at least 1 available device present
-	if (*i_devCount == 0)
-	{
-		printf("Couldn't detect any device present with Vulkan support: %d\n", res);
-		return res;
-	}
+    // Verify that there are at least 1 available device present
+    if (*i_devCount == 0)
+    {
+        printf("Couldn't detect any device present with Vulkan support: %d\n", res);
+        return res;
+    }
 
-	// Allocate enough memory to enumarate all physical devices
-	*vkPhysDev = (VkPhysicalDevice *)malloc(sizeof(VkPhysicalDevice) * (*i_devCount));
-	if (*vkPhysDev == NULL)
-	{
-		printf("Couldn't allocate memory for the physical device array: %d\n", errno);
-		return VK_ERROR_OUT_OF_HOST_MEMORY;
-	}
+    // Allocate enough memory to enumarate all physical devices
+    *vkPhysDev = (VkPhysicalDevice *)malloc(sizeof(VkPhysicalDevice) * (*i_devCount));
+    if (*vkPhysDev == NULL)
+    {
+        printf("Couldn't allocate memory for the physical device array: %d\n", errno);
+        return VK_ERROR_OUT_OF_HOST_MEMORY;
+    }
 
-	// Enumarate all physical devices present
-	res = vkEnumeratePhysicalDevices(vkInst, i_devCount, *vkPhysDev);
-	if (res != VK_SUCCESS)
-	{
-		printf("Failed to enumerate physical devices present: %d\n", res);
-		return res;
-	}
+    // Enumarate all physical devices present
+    res = vkEnumeratePhysicalDevices(vkInst, i_devCount, *vkPhysDev);
+    if (res != VK_SUCCESS)
+    {
+        printf("Failed to enumerate physical devices present: %d\n", res);
+        return res;
+    }
 
     return res;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//	DESCRIPTION:
-//				It prints the device (BASIC) properties associated to each 
-//              VkPhysicalDevice object in the array.
+//  DESCRIPTION:
+//          It prints the device (BASIC) properties associated to each 
+//          VkPhysicalDevice object in the array.
 //  INPUT:
-//			IN i_devCount - Number of entries in the devices array
+//          IN i_devCount - Number of entries in the devices array
 //          IN vkPhysDev  - Array of VkPhysicalDevice objects
 //  OUTPUT:
 //
@@ -175,25 +175,25 @@ void printPhysicalDevicesProperties(
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//	DESCRIPTION:
-//				main function                                                
+//    DESCRIPTION:
+//                main function                                                
 //                          
 
 int main(int argc, char **argv)
 {
-	VkInstance vkInst;
-	VkPhysicalDevice *vkDev = NULL;
-	VkResult res = VK_SUCCESS;
+    VkInstance vkInst;
+    VkPhysicalDevice *vkDev = NULL;
+    VkResult res = VK_SUCCESS;
 
-	uint32_t	i_devCount=0;
+    uint32_t    i_devCount=0;
 
-	// Create an instance
-	res = createInstance(&vkInst);
-	if (res != VK_SUCCESS)
-	{
-		printf("Failed to create instance: %d\n", res);
-		return -1;
-	}
+    // Create an instance
+    res = createInstance(&vkInst);
+    if (res != VK_SUCCESS)
+    {
+        printf("Failed to create instance: %d\n", res);
+        return -1;
+    }
 
     // Create an array with all present devices
     res = createPhysicalDevicesArray(vkInst, &i_devCount, &vkDev);
@@ -207,12 +207,12 @@ int main(int argc, char **argv)
     printPhysicalDevicesProperties(i_devCount, vkDev);
 
     // Free allocated resources
-	if (vkDev)
-	{
-		free(vkDev);
-	}
+    if (vkDev)
+    {
+        free(vkDev);
+    }
 
-	vkDestroyInstance(vkInst, NULL);
+    vkDestroyInstance(vkInst, NULL);
 
-	return 0;
+    return 0;
 }
